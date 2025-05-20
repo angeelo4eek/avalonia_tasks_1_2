@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaTask2_3.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="350"
+        x:Class="AvaloniaTask2_3.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Шахматные фигуры (Задача Avalonia 2_3)">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *" Margin="10">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10" Spacing="10">
+            <TextBlock Text="Выберите фигуру:" VerticalAlignment="Center"/>
+            <ComboBox ItemsSource="{Binding Pieces}"
+                      SelectedItem="{Binding SelectedPiece}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding PieceType}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+
+        <Border Grid.Row="1"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                Padding="15"
+                IsVisible="{Binding SelectedPiece, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <ContentControl Content="{Binding SelectedPiece}">
+                 <ContentControl.ContentTemplate>
+                     <DataTemplate DataType="vm:ChessPieceViewModel">
+                          <StackPanel Spacing="10">
+                              <TextBlock Text="Детали выбранной фигуры" FontWeight="Bold" FontSize="16"/>
+                              <StackPanel Orientation="Horizontal" Spacing="5">
+                                  <TextBlock Text="Тип:" FontWeight="SemiBold"/>
+                                  <TextBlock Text="{Binding PieceType}" />
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5">
+                                  <TextBlock Text="Цвет:" FontWeight="SemiBold"/>
+                                  <TextBlock Text="{Binding PieceColor}" />
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5">
+                                  <TextBlock Text="Текущая позиция:" FontWeight="SemiBold"/>
+                                  <TextBlock Text="{Binding CurrentPosition}" />
+                              </StackPanel>
+                              <Separator/>
+                              <TextBlock Text="Сделать ход" FontWeight="Bold" FontSize="16"/>
+                              <StackPanel Orientation="Horizontal" Spacing="10">
+                                   <TextBlock Text="Целевая позиция (напр. A4):" VerticalAlignment="Center"/>
+                                   <TextBox Text="{Binding NewPositionInput}" Width="60"/>
+                                   <Button Content="Ходить" Command="{Binding MakeMoveCommand}"/>
+                              </StackPanel>
+                              <TextBlock Text="{Binding MoveResult}" Foreground="DimGray" TextWrapping="Wrap"/>
+                          </StackPanel>
+                     </DataTemplate>
+                 </ContentControl.ContentTemplate>
+            </ContentControl>
+        </Border>
+
+        <TextBlock Grid.Row="1"
+                   Text="Выберите фигуру из списка выше."
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding SelectedPiece, Converter={x:Static ObjectConverters.IsNull}}"/>
+    </Grid>
+</Window>
